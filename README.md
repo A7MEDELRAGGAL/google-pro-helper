@@ -19,15 +19,11 @@ google-pro-helper/
 
 ## 浏览器扩展版
 
-原文来源：[B 站已发布帖子](https://www.bilibili.com/opus/1267073583504424964)
 
 Linuxdo原帖在此:
 
 [https://linux.do/t/topic/3123997](https://linux.do/t/topic/3123997)（压缩包夸克链接我直接放下面了）
 
-链接：https://pan.quark.cn/s/bd70b3410a69
-
-提取码：ziUg
 
 （💰 免费激活 Google AI Pro 12 / 24 个月」| offer token 注入）
 
@@ -37,7 +33,7 @@ Linuxdo原帖在此:
 
 > **在此提示，不要用大号！！！！**
 
-### **1.首先去到原帖下载佬友提供的压缩包，解压后，在chrome浏览器上点击"加载未打包的拓展程序"，注意打开开发者模式**
+### **1.在chrome浏览器上点击"加载未打包的拓展程序"，注意打开开发者模式**
 
 ![image](https://i0.hdslb.com/bfs/new_dyn/f6ecc1314583543aedb82bf0d950213e3747579686817540.png@1192w.webp)
 
