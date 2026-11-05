@@ -1,0 +1,2218 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light" />
+    <title>Google AI Pro · 自动化工作台</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='12' fill='%237c5ce5'/%3E%3Cpath d='M20 7l4 9 9 4-9 4-4 9-4-9-9-4 9-4z' fill='white'/%3E%3C/svg%3E"
+    />
+    <style>
+      :root {
+        --bg: #f5f5f9;
+        --panel: #fff;
+        --border: #e9e9f1;
+        --text: #262536;
+        --muted: #767688;
+        --primary: #7555d9;
+        --primary-hover: #6242c7;
+        --success: #23896b;
+        --warning: #a76a16;
+        --danger: #c34b5b;
+        --purple: #7555d9;
+        --radius: 16px;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 24px;
+      }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font:
+          14px/1.6 "Segoe UI",
+          "PingFang SC",
+          "Microsoft YaHei",
+          sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      button,
+      input,
+      select,
+      textarea {
+        font: inherit;
+      }
+      button,
+      a,
+      input,
+      select,
+      textarea {
+        -webkit-tap-highlight-color: transparent;
+      }
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      button,
+      input,
+      select,
+      textarea {
+        transition:
+          background 0.18s,
+          border-color 0.18s,
+          box-shadow 0.18s;
+      }
+      button {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        min-height: 39px;
+        padding: 9px 16px;
+        border: 1px solid transparent;
+        border-radius: 9px;
+        background: var(--primary);
+        color: #fff;
+        font-size: 13px;
+        font-weight: 600;
+        white-space: nowrap;
+        cursor: pointer;
+      }
+      button:hover {
+        background: var(--primary-hover);
+      }
+      button:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+      :focus-visible {
+        outline: 3px solid #b9a7f4;
+        outline-offset: 3px;
+      }
+      .btn-secondary {
+        background: #fff;
+        color: #626174;
+        border-color: #e4e3ed;
+      }
+      .btn-secondary:hover {
+        background: #f1eefb;
+        border-color: #d6cbf3;
+        color: var(--primary);
+      }
+      .btn-danger {
+        background: #fff3f3;
+        border-color: #f5dddd;
+        color: #b44755;
+      }
+      .btn-danger:hover {
+        background: #fbe6e8;
+      }
+      .btn-success {
+        background: var(--primary);
+      }
+      .btn-success:hover {
+        background: var(--primary-hover);
+      }
+      .btn-sm {
+        min-height: 32px;
+        padding: 6px 11px;
+        font-size: 12px;
+        border-radius: 7px;
+      }
+      .icon {
+        width: 19px;
+        height: 19px;
+        flex-shrink: 0;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.7;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .icon-sm {
+        width: 15px;
+        height: 15px;
+      }
+      .icon-library {
+        position: absolute;
+        width: 0;
+        height: 0;
+        overflow: hidden;
+      }
+      .skip-link {
+        position: fixed;
+        left: 16px;
+        top: -80px;
+        z-index: 20;
+        padding: 10px 18px;
+        background: #fff;
+        border-radius: 8px;
+      }
+      .skip-link:focus {
+        top: 16px;
+      }
+      .app-shell {
+        display: grid;
+        grid-template-columns: 218px minmax(0, 1fr);
+        min-height: 100vh;
+      }
+      .sidebar {
+        position: sticky;
+        top: 0;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        padding: 30px 18px 22px;
+        background: #201f30;
+        color: #b9b7cc;
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+        padding: 0 10px;
+        color: #fff;
+      }
+      .brand-mark {
+        display: grid;
+        place-items: center;
+        width: 37px;
+        height: 37px;
+        border: 1px solid #8f76e4;
+        border-radius: 12px;
+        background: #7555d9;
+      }
+      .brand-name {
+        font-size: 17px;
+        font-weight: 700;
+        letter-spacing: -0.4px;
+      }
+      .brand-caption {
+        margin-top: 1px;
+        color: #aaa4bf;
+        font-size: 8px;
+        letter-spacing: 0.8px;
+        white-space: nowrap;
+      }
+      .nav-caption {
+        margin: 42px 13px 12px;
+        font-size: 10px;
+        color: #817d98;
+        letter-spacing: 1.8px;
+      }
+      .side-nav {
+        display: grid;
+        gap: 7px;
+      }
+      .nav-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-height: 46px;
+        padding: 10px 14px;
+        border-radius: 10px;
+        font-size: 13px;
+      }
+      .nav-link:hover {
+        background: #2b293e;
+        color: #fff;
+      }
+      .nav-link.active {
+        background: #38304f;
+        color: #e5dafa;
+      }
+      .nav-link.active::after {
+        content: "";
+        width: 5px;
+        height: 5px;
+        margin-left: auto;
+        border-radius: 50%;
+        background: #b89aef;
+      }
+      .sidebar-bottom {
+        margin-top: auto;
+        padding-top: 36px;
+      }
+      .workspace-note {
+        margin: 0 5px 22px;
+        padding: 16px;
+        border: 1px solid #3c354f;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #322b46, #272439);
+      }
+      .workspace-note .icon {
+        color: #b9a2ef;
+      }
+      .workspace-note strong {
+        display: block;
+        margin-top: 9px;
+        color: #ddd5ed;
+        font-size: 12px;
+        font-weight: 500;
+      }
+      .workspace-note p {
+        margin: 5px 0 0;
+        color: #a09ab6;
+        font-size: 10px;
+        line-height: 1.9;
+      }
+      .sidebar-footer {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 17px 11px 0;
+        border-top: 1px solid #353245;
+        font-size: 11px;
+      }
+      .local-avatar {
+        display: grid;
+        place-items: center;
+        width: 31px;
+        height: 31px;
+        border-radius: 10px;
+        background: #363244;
+        color: #c5badf;
+        font-size: 10px;
+      }
+      .sidebar-footer small {
+        display: block;
+        color: #817d98;
+        font-size: 10px;
+      }
+      .main-content {
+        min-width: 0;
+        padding: 0 36px 28px;
+      }
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        height: 76px;
+        border-bottom: 1px solid var(--border);
+      }
+      .breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #92909f;
+        font-size: 11px;
+      }
+      .breadcrumb strong {
+        color: #535163;
+        font-weight: 500;
+      }
+      .connection {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 11px;
+        color: var(--muted);
+      }
+      .connection::before,
+      .live-indicator::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: #aba8b6;
+      }
+      .connection.is-online::before {
+        background: #45a181;
+        box-shadow: 0 0 0 4px #e5f2ed;
+      }
+      .connection.is-offline::before {
+        background: var(--danger);
+      }
+      .page-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        margin: 31px 0 25px;
+      }
+      .eyebrow {
+        margin: 0 0 4px;
+        color: #8a7aa8;
+        font-size: 9px;
+        font-weight: 600;
+        letter-spacing: 2.2px;
+      }
+      h1 {
+        margin: 0;
+        font-size: clamp(23px, 2.1vw, 30px);
+        line-height: 1.4;
+        font-weight: 650;
+        letter-spacing: -1px;
+      }
+      .page-description {
+        margin: 8px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .heading-tag {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        padding: 7px 11px;
+        border: 1px solid #e1dbf3;
+        border-radius: 7px;
+        color: #817099;
+        background: #eeebf6;
+        font-size: 10px;
+      }
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 15px;
+        margin-bottom: 25px;
+      }
+      .stat-card {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 19px 21px;
+        border: 1px solid var(--border);
+        border-radius: 13px;
+        background: #fff;
+      }
+      .stat-label {
+        margin-bottom: 3px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .stat-value {
+        display: block;
+        font-size: 29px;
+        font-weight: 600;
+        line-height: 1.35;
+        letter-spacing: -1px;
+        font-variant-numeric: tabular-nums;
+      }
+      .stat-icon {
+        display: grid;
+        place-items: center;
+        width: 41px;
+        height: 41px;
+        border-radius: 12px;
+        color: #8670c9;
+        background: #f0ecfa;
+      }
+      .stat-card:nth-child(2) .stat-icon {
+        background: #ebf1fc;
+        color: #6486c4;
+      }
+      .stat-card:nth-child(3) .stat-icon {
+        background: #e9f5ef;
+        color: #439477;
+      }
+      .stat-card:nth-child(4) .stat-icon {
+        background: #fbf1e5;
+        color: #b28b53;
+      }
+      .workflow-card {
+        margin-bottom: 23px;
+        padding: 21px 23px 23px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: #fff;
+      }
+      .section-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+        margin-bottom: 19px;
+      }
+      .section-heading h2 {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0;
+        font-size: 13px;
+        font-weight: 650;
+      }
+      .section-heading p {
+        margin: 4px 0 0;
+        color: var(--muted);
+        font-size: 11px;
+      }
+      .section-caption {
+        color: #9892aa;
+        font-size: 10px;
+        letter-spacing: 0.4px;
+      }
+      .pipeline-bar {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 12px;
+      }
+      .pipe-item {
+        position: relative;
+        min-width: 0;
+      }
+      .pipe-item:not(:last-child)::after {
+        content: "";
+        position: absolute;
+        top: 14px;
+        left: 39px;
+        right: 0;
+        height: 1px;
+        background: #ebe7f4;
+      }
+      .step-number {
+        position: relative;
+        display: grid;
+        place-items: center;
+        width: 29px;
+        height: 29px;
+        margin-bottom: 10px;
+        border: 1px solid #e8e1f7;
+        border-radius: 10px;
+        background: #f5f1fd;
+        color: #8972b9;
+        font-size: 11px;
+        font-weight: 600;
+      }
+      .pipe-item:first-child .step-number {
+        background: #7555d9;
+        border-color: #7555d9;
+        color: #fff;
+      }
+      .pipe-item strong {
+        display: block;
+        font-size: 12px;
+        font-weight: 600;
+      }
+      .pipe-item > span:last-child {
+        display: block;
+        margin-top: 3px;
+        color: #787181;
+        font-size: 11px;
+      }
+      .top-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+        gap: 21px;
+        margin-bottom: 23px;
+        align-items: stretch;
+      }
+      .card {
+        min-width: 0;
+        padding: 23px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: #fff;
+      }
+      .card-title {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+      .card-title h2 {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        margin: 0;
+        font-size: 14px;
+        font-weight: 650;
+      }
+      .section-icon {
+        display: grid;
+        place-items: center;
+        width: 30px;
+        height: 30px;
+        background: #f3effb;
+        border-radius: 9px;
+        color: #917bc2;
+      }
+      .card-subtitle {
+        margin: 3px 0 0 39px;
+        color: #787181;
+        font-size: 11px;
+      }
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px 12px;
+      }
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        min-width: 0;
+      }
+      .form-group.col-2 {
+        grid-column: span 2;
+      }
+      .form-group.col-4 {
+        grid-column: span 4;
+      }
+      .form-group > label,
+      .field-heading > label {
+        color: #6c697d;
+        font-size: 11px;
+      }
+      input,
+      select,
+      textarea {
+        min-width: 0;
+        width: 100%;
+        padding: 9px 11px;
+        border: 1px solid #e8e6ef;
+        border-radius: 8px;
+        background: #fafafd;
+        color: #454154;
+        font-size: 12px;
+      }
+      input,
+      select {
+        min-height: 38px;
+      }
+      input::placeholder,
+      textarea::placeholder {
+        color: #a3a0af;
+      }
+      input:hover,
+      select:hover,
+      textarea:hover {
+        border-color: #d7cfe7;
+      }
+      input:focus,
+      select:focus,
+      textarea:focus {
+        border-color: #aa91e2;
+        outline: none;
+        box-shadow: 0 0 0 3px #f1ecfb;
+        background: #fff;
+      }
+      select {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        cursor: pointer;
+      }
+      .input-pair {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .input-pair > span {
+        color: #b8b1c5;
+      }
+      .field-heading {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+      }
+      .proxy-group {
+        margin-top: 3px;
+        padding-top: 16px;
+        border-top: 1px dashed #eae6f1;
+      }
+      .field-help {
+        color: #797186;
+        font-size: 11px;
+        line-height: 1.8;
+      }
+      #proxyTestResult {
+        min-height: 17px;
+        color: #79748b;
+        font-size: 11px;
+        overflow-wrap: anywhere;
+      }
+      .checkbox-row {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        margin-top: 16px;
+        padding: 11px 12px;
+        border-radius: 9px;
+        background: #f6f3fc;
+        color: #797088;
+        font-size: 11px;
+        cursor: pointer;
+      }
+      .checkbox-row input {
+        width: 14px;
+        min-height: 14px;
+        height: 14px;
+        flex-shrink: 0;
+        margin: 0;
+        padding: 0;
+        accent-color: var(--primary);
+      }
+      .checkbox-row strong {
+        color: #705c96;
+        font-weight: 600;
+      }
+      .import-card {
+        display: flex;
+        flex-direction: column;
+      }
+      .import-card .card-title {
+        margin-bottom: 20px;
+      }
+      .format-label {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 8px;
+        color: #777285;
+        font-size: 11px;
+      }
+      .format-label span {
+        color: #a39cab;
+      }
+      #importText {
+        flex: 1;
+        min-height: 171px;
+        padding: 16px;
+        resize: vertical;
+        background: #fbfaff;
+        border-style: dashed;
+        border-color: #ddd5eb;
+        font-family: Consolas, monospace;
+        font-size: 12px;
+        line-height: 2;
+      }
+      .format-hint {
+        margin: 12px 0 16px;
+        padding: 11px 13px;
+        border-radius: 8px;
+        background: #f7f7fa;
+        color: #827d91;
+        font-size: 10px;
+        line-height: 1.9;
+      }
+      .format-hint code {
+        color: #8a76a9;
+        font:
+          10px/1.9 Consolas,
+          monospace;
+        overflow-wrap: anywhere;
+      }
+      .import-button {
+        width: 100%;
+        min-height: 39px;
+      }
+      .import-footnote {
+        margin: 10px 0 0;
+        text-align: center;
+        color: #a39bac;
+        font-size: 9px;
+      }
+      .queue-card {
+        margin-bottom: 23px;
+        padding-bottom: 8px;
+      }
+      #summaryStats {
+        color: #8a8496;
+        font-size: 10px;
+        font-weight: 400;
+      }
+      .table-wrap {
+        overflow-x: auto;
+        border-top: 1px solid #efecf4;
+        scrollbar-width: thin;
+        scrollbar-color: #d8d0e5 transparent;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+      }
+      th,
+      td {
+        padding: 14px 12px;
+        text-align: left;
+        vertical-align: middle;
+        border-bottom: 1px solid #f0edf4;
+      }
+      th {
+        background: #fcfbfe;
+        color: #7a7287;
+        font-size: 11px;
+        font-weight: 500;
+        white-space: nowrap;
+      }
+      th:first-child,
+      td:first-child {
+        padding-left: 8px;
+      }
+      tr:last-child td {
+        border-bottom: 0;
+      }
+      tr:hover td {
+        background: #fcfbff;
+      }
+      td:nth-child(2) {
+        min-width: 205px;
+      }
+      td:nth-child(5) {
+        min-width: 160px;
+      }
+      td:nth-child(6) {
+        min-width: 115px;
+      }
+      td:last-child {
+        min-width: 250px;
+      }
+      td select {
+        min-height: 29px;
+        width: auto;
+        max-width: 180px;
+      }
+      .account-email {
+        color: #4e455f;
+        font-size: 12px;
+      }
+      .account-meta {
+        margin-top: 3px;
+        color: #7c718b;
+        font:
+          11px/1.8 Consolas,
+          monospace;
+      }
+      .account-network {
+        color: #7e70ad;
+      }
+      .account-recovery {
+        color: #478c77;
+        font-size: 10px;
+      }
+      .expiry-date {
+        color: #756a87;
+        font-weight: 500;
+      }
+      .expiry-date.completed {
+        color: #328669;
+      }
+      .totp-pill {
+        min-height: 29px;
+        padding: 4px 7px;
+        border: 1px solid #e4dcf2;
+        border-radius: 6px;
+        background: #f4f0fb;
+        color: #7a60ad;
+        font:
+          600 12px Consolas,
+          monospace;
+      }
+      .totp-pill:hover {
+        background: #eae1f7;
+      }
+      .totp-rem {
+        color: #9b8bac;
+        font-size: 9px;
+        font-weight: 400;
+      }
+      .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 8px;
+        border-radius: 5px;
+        font-size: 10px;
+        white-space: nowrap;
+      }
+      .status-badge::before {
+        content: "";
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        background: currentColor;
+      }
+      .status-pending {
+        background: #f0eef4;
+        color: #8d829e;
+      }
+      .status-running {
+        background: #eeebfa;
+        color: #8665bc;
+      }
+      .status-waiting_human {
+        background: #fff2dc;
+        color: #a1752f;
+      }
+      .status-completed {
+        background: #e9f5ee;
+        color: #408866;
+      }
+      .status-error {
+        background: #fff0f0;
+        color: #bb6572;
+      }
+      .step-dots {
+        display: flex;
+        gap: 4px;
+        margin-bottom: 5px;
+      }
+      .step-dot {
+        display: grid;
+        place-items: center;
+        width: 19px;
+        height: 17px;
+        border: 1px solid #eae5f1;
+        border-radius: 4px;
+        background: #f6f4f9;
+        color: #b2a9be;
+        font-size: 9px;
+      }
+      .step-dot.done {
+        background: #edf6f0;
+        border-color: #d5e8da;
+        color: #5b9974;
+      }
+      .step-dot.active {
+        background: #8970c6;
+        border-color: #8970c6;
+        color: #fff;
+      }
+      .step-msg {
+        max-width: 240px;
+        color: #9b91a5;
+        font-size: 10px;
+        overflow-wrap: anywhere;
+      }
+      .empty-state {
+        height: 162px;
+        text-align: center;
+        color: #a59bad;
+      }
+      .empty-state .icon {
+        display: block;
+        width: 28px;
+        height: 28px;
+        margin: 0 auto 9px;
+        color: #c3b6d8;
+      }
+      .empty-state strong {
+        display: block;
+        color: #7e728d;
+        font-size: 12px;
+        font-weight: 500;
+      }
+      .empty-state p {
+        margin: 4px 0 0;
+        font-size: 11px;
+      }
+      .empty-state a {
+        color: var(--primary);
+      }
+      .log-card {
+        padding-bottom: 18px;
+      }
+      .log-card .card-title {
+        margin-bottom: 16px;
+      }
+      .live-indicator {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: #96909f;
+        font-size: 10px;
+      }
+      .terminal {
+        height: 185px;
+        overflow-y: auto;
+        padding: 17px 19px;
+        border: 1px solid #302b40;
+        border-radius: 10px;
+        background: #242130;
+        color: #b7afc6;
+        font:
+          12px/1.9 Consolas,
+          "Microsoft YaHei",
+          monospace;
+        scrollbar-width: thin;
+        scrollbar-color: #564963 transparent;
+      }
+      .terminal:empty::before {
+        content: "›  等待任务日志…";
+        color: #867893;
+      }
+      .log-line {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+      .log-warn {
+        color: #e6c38a;
+      }
+      .log-err {
+        color: #eea1ae;
+      }
+      .log-ok {
+        color: #8fc5aa;
+      }
+      .log-note {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin: 10px 0 0;
+        color: #a39aaf;
+        font-size: 10px;
+      }
+      .page-footer {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        margin-top: 22px;
+        color: #b2aabf;
+        font-size: 9px;
+        letter-spacing: 0.3px;
+      }
+      .screenshot-dialog {
+        width: min(1100px, calc(100% - 32px));
+        max-height: 90dvh;
+        padding: 18px;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        background: #fff;
+        color: var(--text);
+        box-shadow: 0 24px 90px #24213040;
+      }
+      .screenshot-dialog::backdrop {
+        background: #201b32b8;
+        backdrop-filter: blur(5px);
+      }
+      .modal-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 14px;
+      }
+      #modalTitle {
+        overflow-wrap: anywhere;
+      }
+      #modalImg {
+        display: block;
+        max-width: 100%;
+        margin: auto;
+        border: 1px solid var(--border);
+        border-radius: 9px;
+      }
+      @media (min-width: 1650px) {
+        .main-content {
+          width: 100%;
+          max-width: 1660px;
+          margin-inline: auto;
+          padding-inline: 46px;
+        }
+      }
+      @media (max-width: 1250px) {
+        .app-shell {
+          grid-template-columns: 184px minmax(0, 1fr);
+        }
+        .sidebar {
+          padding-inline: 12px;
+        }
+        .main-content {
+          padding-inline: 24px;
+        }
+        .top-grid {
+          grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+          gap: 16px;
+        }
+        .card {
+          padding: 19px;
+        }
+        .stat-card {
+          padding: 17px;
+        }
+      }
+      @media (max-width: 1050px) {
+        .app-shell {
+          grid-template-columns: 164px minmax(0, 1fr);
+        }
+        .brand {
+          gap: 8px;
+          padding-inline: 5px;
+        }
+        .brand-name {
+          font-size: 14px;
+        }
+        .brand-caption {
+          font-size: 8px;
+        }
+        .brand-mark {
+          width: 31px;
+          height: 31px;
+        }
+        .nav-link {
+          padding-inline: 11px;
+        }
+        .top-grid {
+          grid-template-columns: minmax(0, 1fr);
+        }
+        .stat-icon {
+          width: 32px;
+          height: 32px;
+          border-radius: 10px;
+        }
+        .stat-card {
+          padding: 14px;
+        }
+        .stat-value {
+          font-size: 25px;
+        }
+        #importText {
+          min-height: 158px;
+        }
+      }
+      @media (max-width: 760px) {
+        .app-shell {
+          display: block;
+        }
+        .sidebar {
+          position: static;
+          height: auto;
+          padding: 16px 20px 10px;
+        }
+        .brand {
+          padding: 0;
+        }
+        .brand-mark {
+          width: 32px;
+          height: 32px;
+        }
+        .brand-name {
+          font-size: 16px;
+        }
+        .brand-caption {
+          font-size: 8px;
+        }
+        .nav-caption,
+        .sidebar-bottom {
+          display: none;
+        }
+        .side-nav {
+          display: flex;
+          gap: 5px;
+          margin-top: 16px;
+        }
+        .nav-link {
+          flex: 1;
+          justify-content: center;
+          min-height: 38px;
+          padding: 8px 5px;
+          gap: 6px;
+          font-size: 11px;
+        }
+        .nav-link .icon {
+          width: 15px;
+          height: 15px;
+        }
+        .nav-link.active::after {
+          display: none;
+        }
+        .main-content {
+          padding: 0 20px 24px;
+        }
+        .topbar {
+          height: 57px;
+        }
+        .page-heading {
+          margin: 24px 0 20px;
+        }
+        .heading-tag {
+          display: none;
+        }
+        .stats-grid {
+          gap: 10px;
+          margin-bottom: 18px;
+        }
+        .stat-card {
+          padding: 13px;
+        }
+        .stat-icon {
+          display: none;
+        }
+        .stat-label {
+          font-size: 10px;
+        }
+        .workflow-card {
+          padding: 18px;
+          margin-bottom: 18px;
+        }
+        .pipe-item strong {
+          font-size: 10px;
+        }
+        .pipe-item > span:last-child {
+          display: none;
+        }
+        .pipeline-bar {
+          gap: 5px;
+        }
+        .pipe-item:not(:last-child)::after {
+          left: 33px;
+          right: 3px;
+        }
+        .section-caption {
+          display: none;
+        }
+        .top-grid {
+          gap: 18px;
+          margin-bottom: 18px;
+        }
+        .queue-card {
+          margin-bottom: 18px;
+        }
+        .page-description {
+          font-size: 11px;
+        }
+        .card-title {
+          align-items: flex-start;
+        }
+        .card-title h2 {
+          font-size: 13px;
+        }
+        #summaryStats {
+          max-width: 140px;
+          text-align: right;
+          font-size: 9px;
+        }
+      }
+      @media (max-width: 420px) {
+        .main-content {
+          padding-inline: 14px;
+        }
+        .sidebar {
+          padding-inline: 14px;
+        }
+        .stats-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .stat-card {
+          padding: 13px 16px;
+        }
+        .stat-icon {
+          display: grid;
+        }
+        .card,
+        .workflow-card {
+          padding: 16px;
+        }
+        .form-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        .form-group.col-4 {
+          grid-column: span 2;
+        }
+        .form-group.col-2 {
+          grid-column: span 2;
+        }
+        .section-heading {
+          flex-wrap: wrap;
+        }
+        .section-heading > button {
+          min-height: 35px;
+        }
+        .breadcrumb {
+          font-size: 10px;
+          gap: 6px;
+        }
+        .connection {
+          font-size: 10px;
+        }
+        .page-footer {
+          font-size: 8px;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        html {
+          scroll-behavior: auto;
+        }
+        *,
+        *::before,
+        *::after {
+          transition: none !important;
+          animation: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <svg
+      class="icon-library"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <symbol id="i-spark" viewBox="0 0 24 24">
+        <path
+          d="m12 3 2.6 6.4L21 12l-6.4 2.6L12 21l-2.6-6.4L3 12l6.4-2.6L12 3Z"
+        />
+      </symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24">
+        <rect x="3" y="3" width="7" height="7" rx="2" />
+        <rect x="14" y="3" width="7" height="7" rx="2" />
+        <rect x="3" y="14" width="7" height="7" rx="2" />
+        <rect x="14" y="14" width="7" height="7" rx="2" />
+      </symbol>
+      <symbol id="i-sliders" viewBox="0 0 24 24">
+        <path d="M4 7h5m4 0h7M4 17h9m4 0h3" />
+        <circle cx="11" cy="7" r="2" />
+        <circle cx="15" cy="17" r="2" />
+      </symbol>
+      <symbol id="i-users" viewBox="0 0 24 24">
+        <circle cx="9" cy="8" r="3" />
+        <path
+          d="M3 20v-2a6 6 0 0 1 12 0v2m2-15a3 3 0 0 1 0 6m1 3a5 5 0 0 1 3 4v2"
+        />
+      </symbol>
+      <symbol id="i-terminal" viewBox="0 0 24 24">
+        <rect x="3" y="4" width="18" height="16" rx="3" />
+        <path d="m7 9 3 3-3 3m6 0h4" />
+      </symbol>
+      <symbol id="i-shield" viewBox="0 0 24 24">
+        <path d="m12 3 8 3v6c0 5-8 9-8 9s-8-4-8-9V6l8-3Z" />
+        <path d="m8.5 12 2.5 2.5 4.5-5" />
+      </symbol>
+      <symbol id="i-play" viewBox="0 0 24 24">
+        <path d="m8 5 11 7-11 7V5Z" />
+      </symbol>
+      <symbol id="i-check" viewBox="0 0 24 24">
+        <path d="m5 12 4 4L19 6" />
+      </symbol>
+      <symbol id="i-alert" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 7v6m0 4h.01" />
+      </symbol>
+      <symbol id="i-upload" viewBox="0 0 24 24">
+        <path
+          d="M12 16V3m-5 5 5-5 5 5M4 15v5a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-5"
+        />
+      </symbol>
+      <symbol id="i-save" viewBox="0 0 24 24">
+        <path
+          d="M5 3h12l4 4v13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5a2 2 0 0 1 2-2Z"
+        />
+        <path d="M7 3v6h10V3M7 21v-8h10v8" />
+      </symbol>
+      <symbol id="i-stop" viewBox="0 0 24 24">
+        <rect x="6" y="6" width="12" height="12" rx="2" />
+      </symbol>
+      <symbol id="i-globe" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="9" />
+        <ellipse cx="12" cy="12" rx="4" ry="9" />
+        <path d="M3 12h18" />
+      </symbol>
+      <symbol id="i-inbox" viewBox="0 0 24 24">
+        <path
+          d="m3 14 3-9h12l3 9v5a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-5Zm0 0h5l2 3h4l2-3h5"
+        />
+      </symbol>
+    </svg>
+    <a class="skip-link" href="#main">跳至主要内容</a>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="工作台导航">
+        <a class="brand" href="#overview" aria-label="AI Studio 工作台首页">
+          <span class="brand-mark"
+            ><svg class="icon" aria-hidden="true"><use href="#i-spark" /></svg
+          ></span>
+          <span
+            ><span class="brand-name"
+              >AI Studio<span style="color: #b699ed">.</span></span
+            >
+            <div class="brand-caption">AUTOMATION WORKSPACE</div></span
+          >
+        </a>
+        <div class="nav-caption">WORKSPACE</div>
+        <nav class="side-nav">
+          <a class="nav-link active" href="#overview"
+            ><svg class="icon" aria-hidden="true"><use href="#i-grid" /></svg
+            >工作概览</a
+          >
+          <a class="nav-link" href="#settings"
+            ><svg class="icon" aria-hidden="true"><use href="#i-sliders" /></svg
+            >全局配置</a
+          >
+          <a class="nav-link" href="#accounts"
+            ><svg class="icon" aria-hidden="true"><use href="#i-users" /></svg
+            >账号队列</a
+          >
+          <a class="nav-link" href="#logs"
+            ><svg class="icon" aria-hidden="true">
+              <use href="#i-terminal" /></svg
+            >运行日志</a
+          >
+        </nav>
+        <div class="sidebar-bottom">
+          <div class="workspace-note">
+            <svg class="icon" aria-hidden="true"><use href="#i-shield" /></svg
+            ><strong>流程清晰，状态尽在掌握</strong>
+            <p>配置、账号与执行进度<br />集中在一个工作空间。</p>
+          </div>
+          <div class="sidebar-footer">
+            <span class="local-avatar">AI</span
+            ><span>本地工作空间<small>Google AI Pro Console</small></span>
+          </div>
+        </div>
+      </aside>
+      <main class="main-content" id="main">
+        <header class="topbar">
+          <div class="breadcrumb">
+            工作空间 <span>/</span> <strong>自动化控制台</strong>
+          </div>
+          <span class="connection" id="connectionStatus" role="status"
+            >正在连接</span
+          >
+        </header>
+        <section id="overview" aria-labelledby="pageTitle">
+          <div class="page-heading">
+            <div>
+              <p class="eyebrow">YOUR AUTOMATION, SIMPLIFIED</p>
+              <h1 id="pageTitle">
+                让每一步，都井然有序<span style="color: #9678ca">。</span>
+              </h1>
+              <p class="page-description">
+                Google AI Pro 自动化工作台 · 从账号导入到执行进度，一目了然。
+              </p>
+            </div>
+            <span class="heading-tag"
+              ><svg class="icon icon-sm" aria-hidden="true">
+                <use href="#i-spark" /></svg
+              >GOOGLE AI PRO</span
+            >
+          </div>
+          <div class="stats-grid" aria-label="账号统计">
+            <div class="stat-card">
+              <div>
+                <div class="stat-label">账号总数</div>
+                <strong class="stat-value" id="statTotal">—</strong>
+              </div>
+              <span class="stat-icon"
+                ><svg class="icon" aria-hidden="true">
+                  <use href="#i-users" /></svg
+              ></span>
+            </div>
+            <div class="stat-card">
+              <div>
+                <div class="stat-label">正在执行</div>
+                <strong class="stat-value" id="statRunning">—</strong>
+              </div>
+              <span class="stat-icon"
+                ><svg class="icon" aria-hidden="true">
+                  <use href="#i-play" /></svg
+              ></span>
+            </div>
+            <div class="stat-card">
+              <div>
+                <div class="stat-label">已完成</div>
+                <strong class="stat-value" id="statCompleted">—</strong>
+              </div>
+              <span class="stat-icon"
+                ><svg class="icon" aria-hidden="true">
+                  <use href="#i-check" /></svg
+              ></span>
+            </div>
+            <div class="stat-card">
+              <div>
+                <div class="stat-label">需要关注</div>
+                <strong class="stat-value" id="statAttention">—</strong>
+              </div>
+              <span class="stat-icon"
+                ><svg class="icon" aria-hidden="true">
+                  <use href="#i-alert" /></svg
+              ></span>
+            </div>
+          </div>
+          <div class="workflow-card">
+            <div class="section-heading">
+              <div>
+                <h2>
+                  执行流程 <span class="section-caption">/ WORKFLOW</span>
+                </h2>
+                <p>五个步骤，串联完整任务流程</p>
+              </div>
+              <button class="btn-danger btn-sm" onclick="stopAll()">
+                <svg class="icon icon-sm" aria-hidden="true">
+                  <use href="#i-stop" /></svg
+                >停止全部任务
+              </button>
+            </div>
+            <div class="pipeline-bar">
+              <div class="pipe-item">
+                <span class="step-number">01</span><strong>登录与验证</strong
+                ><span>账号登录 · 邮箱 / 2FA</span>
+              </div>
+              <div class="pipe-item">
+                <span class="step-number">02</span><strong>首层 12 个月</strong
+                ><span>Pro 5 TB · 首层试用</span>
+              </div>
+              <div class="pipe-item">
+                <span class="step-number">03</span><strong>二层 6 个月</strong
+                ><span>延长至 18 个月</span>
+              </div>
+              <div class="pipe-item">
+                <span class="step-number">04</span><strong>三层 6 个月</strong
+                ><span>延长至 24 个月</span>
+              </div>
+              <div class="pipe-item">
+                <span class="step-number">05</span><strong>取消自动续订</strong
+                ><span>取消续订 · 截图核验</span>
+              </div>
+            </div>
+          </div>
+        </section>
+        <div class="top-grid">
+          <section class="card" id="settings" aria-labelledby="settingsTitle">
+            <div class="card-title">
+              <div>
+                <h2 id="settingsTitle">
+                  <span class="section-icon"
+                    ><svg class="icon icon-sm" aria-hidden="true">
+                      <use href="#i-sliders" /></svg></span
+                  >全局配置
+                </h2>
+                <p class="card-subtitle">设置执行方案、支付信息与网络</p>
+              </div>
+              <button class="btn-sm btn-secondary" onclick="saveConfig()">
+                <svg class="icon icon-sm" aria-hidden="true">
+                  <use href="#i-save" /></svg
+                >保存配置
+              </button>
+            </div>
+            <div class="form-grid">
+              <div class="form-group col-2">
+                <label for="cfgTargetRegion">目标地区</label
+                ><select
+                  id="cfgTargetRegion"
+                  onchange="onRegionChange(this.value)"
+                >
+                  <option value="US">美国 · USD / 俄勒冈 97201</option>
+                </select>
+              </div>
+              <div class="form-group col-2">
+                <label for="cfgTargetPlan">执行方案</label
+                ><select id="cfgTargetPlan">
+                  <option value="pro_2year_zero">
+                    Google AI Pro · 24 个月 / 5 TB
+                  </option>
+                </select>
+              </div>
+              <div class="form-group col-2">
+                <label for="cfgCardNumber">支付卡号</label
+                ><input
+                  type="text"
+                  id="cfgCardNumber"
+                  placeholder="Visa / Mastercard 卡号"
+                  autocomplete="off"
+                />
+              </div>
+              <div class="form-group">
+                <label for="cfgExpMonth">有效期</label>
+                <div class="input-pair">
+                  <input
+                    type="text"
+                    id="cfgExpMonth"
+                    placeholder="月"
+                    aria-label="有效期月份"
+                  /><span>/</span
+                  ><input
+                    type="text"
+                    id="cfgExpYear"
+                    placeholder="年"
+                    aria-label="有效期年份"
+                  />
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="cfgCvc">安全码</label
+                ><input
+                  type="password"
+                  id="cfgCvc"
+                  placeholder="CVC"
+                  autocomplete="off"
+                />
+              </div>
+              <div class="form-group">
+                <label for="cfgHolder">持卡人</label
+                ><input type="text" id="cfgHolder" placeholder="英文姓名" />
+              </div>
+              <div class="form-group col-2">
+                <label for="cfgAddr">账单地址</label
+                ><input type="text" id="cfgAddr" placeholder="Address Line 1" />
+              </div>
+              <div class="form-group">
+                <label for="cfgZip">邮编 / 州</label>
+                <div class="input-pair">
+                  <input
+                    type="text"
+                    id="cfgZip"
+                    placeholder="97201"
+                    aria-label="账单邮编"
+                  /><input
+                    type="text"
+                    id="cfgProvince"
+                    placeholder="OR"
+                    aria-label="账单所在州"
+                  />
+                </div>
+              </div>
+              <div class="form-group col-4 proxy-group">
+                <div class="field-heading">
+                  <label for="cfgProxyTemplate"
+                    >网络代理 <span style="color: #aaa2b5">/ 可选</span></label
+                  ><button
+                    class="btn-sm btn-secondary"
+                    id="btnTestProxy"
+                    onclick="testProxyNow()"
+                  >
+                    <svg class="icon icon-sm" aria-hidden="true">
+                      <use href="#i-globe" /></svg
+                    >测试连通性
+                  </button>
+                </div>
+                <input
+                  type="text"
+                  id="cfgProxyTemplate"
+                  placeholder="留空使用本机网络，或填入代理地址"
+                />
+                <div id="proxyTestResult" role="status">
+                  未配置代理时，使用本机当前网络。
+                </div>
+              </div>
+            </div>
+            <label class="checkbox-row"
+              ><input type="checkbox" id="cfgAutoCancel" checked /><span
+                ><strong>完成后自动取消续订</strong> · Step 5 前往 Google Play
+                处理</span
+              ></label
+            >
+          </section>
+          <section
+            class="card import-card"
+            id="import"
+            aria-labelledby="importTitle"
+          >
+            <div class="card-title">
+              <div>
+                <h2 id="importTitle">
+                  <span class="section-icon"
+                    ><svg class="icon icon-sm" aria-hidden="true">
+                      <use href="#i-upload" /></svg></span
+                  >导入账号
+                </h2>
+                <p class="card-subtitle">批量添加账号，统一管理执行</p>
+              </div>
+              <span class="section-caption">BATCH IMPORT</span>
+            </div>
+            <label class="format-label" for="importText"
+              >账号信息<span>每行一个账号</span></label
+            >
+            <textarea
+              id="importText"
+              spellcheck="false"
+              placeholder="在这里粘贴账号信息…&#10;&#10;邮箱----密码----辅助邮箱&#10;邮箱----密码----2FA 密钥&#10;邮箱----密码----辅助邮箱----2FA 密钥"
+            ></textarea>
+            <div class="format-hint">
+              支持辅助邮箱与 2FA 账号，自动识别分隔符。<br /><code
+                >分隔符：---- &nbsp; / &nbsp; — &nbsp; | &nbsp; 空格</code
+              >
+            </div>
+            <button class="import-button" onclick="importAccounts()">
+              <svg class="icon icon-sm" aria-hidden="true">
+                <use href="#i-upload" /></svg
+              >导入账号列表
+            </button>
+            <p class="import-footnote">导入后可在下方队列中选择起始步骤</p>
+          </section>
+        </div>
+        <section
+          class="card queue-card"
+          id="accounts"
+          aria-labelledby="accountsTitle"
+        >
+          <div class="card-title">
+            <div>
+              <h2 id="accountsTitle">
+                <span class="section-icon"
+                  ><svg class="icon icon-sm" aria-hidden="true">
+                    <use href="#i-users" /></svg></span
+                >账号队列
+              </h2>
+              <p class="card-subtitle">查看状态与进度，按需执行任务</p>
+            </div>
+            <span id="summaryStats">正在读取账号…</span>
+          </div>
+          <div class="section-heading">
+            <label for="batchStartStep" class="field-help">批量执行起点</label>
+            <div
+              style="display: flex; align-items: center; gap: 8px; min-width: 0"
+            >
+              <select id="batchStartStep" aria-label="批量执行的起始步骤">
+                <option value="1">Step 1 · 完整流程</option>
+                <option value="2">Step 2 · 首层 12 个月</option>
+                <option value="3">Step 3 · 二层 6 个月</option>
+                <option value="4">Step 4 · 三层 6 个月</option>
+                <option value="5">Step 5 · 仅取消续订</option></select
+              ><button id="btnBatchRun" onclick="runBatch()">
+                <svg class="icon icon-sm" aria-hidden="true">
+                  <use href="#i-play" /></svg
+                >批量执行
+              </button>
+            </div>
+          </div>
+          <div
+            class="table-wrap"
+            role="region"
+            aria-label="账号队列表格，可横向滚动"
+            tabindex="0"
+          >
+            <table>
+              <thead>
+                <tr>
+                  <th>编号</th>
+                  <th>账号信息</th>
+                  <th>验证方式</th>
+                  <th>状态</th>
+                  <th>执行进度</th>
+                  <th>当前到期日</th>
+                  <th>核验截图</th>
+                  <th>操作</th>
+                </tr>
+              </thead>
+              <tbody id="accountsTbody"></tbody>
+            </table>
+          </div>
+        </section>
+        <section class="card log-card" id="logs" aria-labelledby="logsTitle">
+          <div class="card-title">
+            <h2 id="logsTitle">
+              <span class="section-icon"
+                ><svg class="icon icon-sm" aria-hidden="true">
+                  <use href="#i-terminal" /></svg></span
+              >运行日志
+            </h2>
+            <span class="live-indicator">自动刷新 · 1.5 s</span>
+          </div>
+          <div
+            class="terminal"
+            id="logTerminal"
+            role="region"
+            aria-label="实时执行日志"
+            tabindex="0"
+          ></div>
+          <p class="log-note">
+            <svg class="icon icon-sm" aria-hidden="true">
+              <use href="#i-alert" /></svg
+            >遇到人机验证时，请在弹出的浏览器中完成验证，任务将继续。
+          </p>
+        </section>
+        <footer class="page-footer">
+          <span>AI STUDIO · GOOGLE AI PRO WORKSPACE</span
+          ><span>专注流程，轻松掌控。</span>
+        </footer>
+      </main>
+    </div>
+    <dialog
+      class="screenshot-dialog"
+      id="imgModal"
+      aria-labelledby="modalTitle"
+      onclick="if (event.target === this) closeModal()"
+    >
+      <div class="modal-heading">
+        <strong id="modalTitle">核验截图预览</strong
+        ><button class="btn-sm btn-secondary" onclick="closeModal()">
+          关闭
+        </button>
+      </div>
+      <img id="modalImg" alt="账号任务的最新核验截图" />
+    </dialog>
+    <script>
+      let configInitialized = false;
+      let selectedStartSteps = {};
+      let copiedAccountMap = {};
+      let openedBrowserMap = {};
+      let renderedAccountRows = [];
+      let renderedLogsHtml = null;
+      let stateRequestSequence = 0;
+      let appliedStateSequence = 0;
+
+      async function fetchState() {
+        const requestSequence = ++stateRequestSequence;
+        try {
+          const res = await fetch("/api/state");
+          if (!res.ok) {
+            throw new Error(`State request failed: ${res.status}`);
+          }
+          const data = await res.json();
+          if (requestSequence < appliedStateSequence) {
+            return;
+          }
+          appliedStateSequence = requestSequence;
+
+          if (!configInitialized) {
+            document.getElementById("cfgTargetRegion").value =
+              data.target_region || "US";
+            document.getElementById("cfgTargetPlan").value =
+              data.target_plan || "pro_2year_zero";
+            document.getElementById("cfgAutoCancel").checked =
+              data.auto_cancel !== false;
+            document.getElementById("cfgProxyTemplate").value =
+              data.proxy_template || "";
+            const c = data.card || {};
+            document.getElementById("cfgCardNumber").value = c.number || "";
+            document.getElementById("cfgExpMonth").value = c.exp_month || "";
+            document.getElementById("cfgExpYear").value = c.exp_year || "";
+            document.getElementById("cfgCvc").value = c.cvc || "";
+            document.getElementById("cfgHolder").value = c.holder || "";
+            document.getElementById("cfgAddr").value =
+              c.address_line1 || "700 SW 5th Ave";
+            document.getElementById("cfgZip").value = c.postal_code || "97201";
+            document.getElementById("cfgProvince").value = c.province || "OR";
+            configInitialized = true;
+          }
+
+          renderAccounts(data.accounts || []);
+          renderLogs(data.logs || []);
+
+          const total = (data.accounts || []).length;
+          const done = (data.accounts || []).filter(
+            (a) => a.status === "completed",
+          ).length;
+          const running = data.active_count || 0;
+          document.getElementById("summaryStats").textContent =
+            `共 ${total} 个账号 · 已完成 ${done} · 执行中 ${running}`;
+          document.getElementById("statTotal").textContent = total;
+          document.getElementById("statRunning").textContent = running;
+          document.getElementById("statCompleted").textContent = done;
+          document.getElementById("statAttention").textContent = (
+            data.accounts || []
+          ).filter(
+            (a) => a.status === "error" || a.status === "waiting_human",
+          ).length;
+          const connection = document.getElementById("connectionStatus");
+          connection.className = "connection is-online";
+          connection.textContent = "本地服务已连接";
+        } catch (e) {
+          if (requestSequence < appliedStateSequence) {
+            return;
+          }
+          appliedStateSequence = requestSequence;
+          const connection = document.getElementById("connectionStatus");
+          connection.className = "connection is-offline";
+          connection.textContent = "连接中断 · 正在重试";
+          console.error("State poll error:", e);
+        }
+      }
+
+      function statusBadgeHtml(status) {
+        const map = {
+          pending: ["status-pending", "待执行"],
+          running: ["status-running", "执行中"],
+          waiting_human: ["status-waiting_human", "等待验证"],
+          completed: ["status-completed", "已完成"],
+          error: ["status-error", "异常中断"],
+          stopped: ["status-pending", "已停止"],
+        };
+        const [cls, label] = map[status] || ["status-pending", status];
+        return `<span class="status-badge ${cls}">${label}</span>`;
+      }
+
+      function stepDotsHtml(curStep, status) {
+        let html = '<div class="step-dots">';
+        for (let s = 1; s <= 5; s++) {
+          let cls = "";
+          if (status === "completed" || s < curStep) cls = "done";
+          else if (
+            s === curStep &&
+            (status === "running" || status === "waiting_human")
+          )
+            cls = "active";
+          html += `<div class="step-dot ${cls}" title="Step ${s}">${s}</div>`;
+        }
+        html += "</div>";
+        return html;
+      }
+
+      function renderAccounts(accounts) {
+        const tbody = document.getElementById("accountsTbody");
+        const rows = accounts
+          .map((acc) => {
+            const savedStart = selectedStartSteps[acc.id] || 1;
+            const shotBtn = acc.last_screenshot
+              ? `<button class="btn-sm btn-secondary" onclick="showScreenshot('${acc.id}', '${acc.last_screenshot}')">查看</button>`
+              : `<span style="color:var(--muted);font-size:12px;">-</span>`;
+
+            const totpHtml =
+              acc.totp_secret && acc.totp_now && acc.totp_now !== "------"
+                ? `<button type="button" class="totp-pill" onclick="copyText('${acc.totp_now}')" title="点击复制 6 位动态验证码">
+                 <span>${acc.totp_now}</span>
+                 <span class="totp-rem">${acc.totp_rem}s</span>
+               </button>`
+                : `<span class="account-recovery">辅助邮箱</span>`;
+
+            return `
+            <tr>
+              <td><strong>${acc.id}</strong></td>
+              <td>
+                <div class="account-email">${acc.email}</div>
+                <div class="account-meta">
+                  密码: ${acc.password}
+                  ${acc.recovery_email ? `<br/>辅助: ${acc.recovery_email}` : ""}
+                  ${acc.ip_info ? `<span class="account-network">[${acc.ip_info}]</span>` : acc.proxy ? `<span class="account-network">[独立代理]</span>` : ""}
+                </div>
+              </td>
+              <td>${totpHtml}</td>
+              <td>${statusBadgeHtml(acc.status)}</td>
+              <td>
+                ${stepDotsHtml(acc.current_step || 0, acc.status)}
+                <div class="step-msg">${acc.step_message || ""}</div>
+              </td>
+              <td>
+                <span class="expiry-date ${acc.status === "completed" ? "completed" : ""}">
+                  ${acc.expiry_date || "-"}
+                </span>
+              </td>
+              <td>${shotBtn}</td>
+              <td>
+                <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                  <select
+                    style="padding:4px 6px; font-size:12px;"
+                    onchange="selectedStartSteps['${acc.id}'] = parseInt(this.value)"
+                  >
+                    <option value="1" ${savedStart === 1 ? "selected" : ""}>从 Step 1 全跑</option>
+                    <option value="2" ${savedStart === 2 ? "selected" : ""}>从 Step 2 首层12M($0)</option>
+                    <option value="3" ${savedStart === 3 ? "selected" : ""}>从 Step 3 二层6M($0)</option>
+                    <option value="4" ${savedStart === 4 ? "selected" : ""}>从 Step 4 三层封顶($0)</option>
+                    <option value="5" ${savedStart === 5 ? "selected" : ""}>从 Step 5 退订锁死</option>
+                  </select>
+                  <button
+                    class="btn-sm ${acc.is_running ? "btn-danger" : "btn-success"}"
+                    onclick="${acc.is_running ? `stopSingle('${acc.id}')` : `runSingle('${acc.id}')`}"
+                  >
+                    ${acc.is_running ? "停止" : "启动"}
+                  </button>
+                  <button
+                    class="btn-sm ${openedBrowserMap[acc.id] ? "btn-success" : "btn-secondary"}"
+                    onclick="openBrowser('${acc.id}')"
+                    title="手动打开该账号的独立 Chrome 窗口"
+                  >
+                    ${openedBrowserMap[acc.id] ? "已打开" : "浏览器"}
+                  </button>
+                  <button class="btn-sm btn-secondary" onclick="resetAccount('${acc.id}')" title="重置状态为待执行">
+                    重置
+                  </button>
+                  <button class="btn-sm btn-secondary" onclick="deleteAccount('${acc.id}')" title="移除此账号">
+                    移除
+                  </button>
+                  <button
+                    class="btn-sm ${copiedAccountMap[acc.id] ? "btn-success" : "btn-secondary"}"
+                    onclick="copyAccountFull('${acc.id}', '${acc.email}', '${acc.password}', '${acc.totp_secret || acc.recovery_email || ""}')"
+                    title="一键复制账号信息"
+                  >
+                    ${copiedAccountMap[acc.id] ? "已复制" : "复制"}
+                  </button>
+                </div>
+              </td>
+            </tr>
+          `.trim();
+          });
+        if (rows.length === 0) {
+          rows.push(
+            '<tr><td colspan="8" class="empty-state"><svg class="icon" aria-hidden="true"><use href="#i-inbox"/></svg><strong>准备好开始了吗？</strong><p>先在<a href="#import">导入账号</a>区域添加账号，执行进度会显示在这里。</p></td></tr>',
+          );
+        }
+        // Keep unchanged rows alive so polling does not interrupt their controls.
+        rows.forEach((html, index) => {
+          if (html === renderedAccountRows[index]) {
+            return;
+          }
+          const row = tbody.children[index];
+          if (row) {
+            row.outerHTML = html;
+          } else {
+            tbody.insertAdjacentHTML("beforeend", html);
+          }
+        });
+        while (tbody.children.length > rows.length) {
+          tbody.lastElementChild.remove();
+        }
+        renderedAccountRows = rows;
+      }
+
+      function renderLogs(logs) {
+        const term = document.getElementById("logTerminal");
+        const html = logs
+          .map((line) => {
+            let cls = "log-line";
+            if (line.includes("⚠️") || line.includes("人机验证"))
+              cls += " log-warn";
+            else if (line.includes("❌") || line.includes("异常"))
+              cls += " log-err";
+            else if (line.includes("✅") || line.includes("🎉"))
+              cls += " log-ok";
+            return `<div class="${cls}">${escapeHtml(line)}</div>`;
+          })
+          .join("");
+        if (html === renderedLogsHtml) {
+          return;
+        }
+        const isAtBottom =
+          term.scrollHeight - term.clientHeight <= term.scrollTop + 40;
+        term.innerHTML = html;
+        renderedLogsHtml = html;
+        if (isAtBottom) {
+          term.scrollTop = term.scrollHeight;
+        }
+      }
+
+      function escapeHtml(str) {
+        return str
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;");
+      }
+
+      function onRegionChange(region) {
+        document.getElementById("cfgAddr").value = "700 SW 5th Ave";
+        document.getElementById("cfgZip").value = "97201";
+        document.getElementById("cfgProvince").value = "OR";
+      }
+
+      async function testProxyNow() {
+        const btn = document.getElementById("btnTestProxy");
+        const resBox = document.getElementById("proxyTestResult");
+        btn.disabled = true;
+        btn.textContent = "正在检测…";
+        resBox.style.color = "#7555d9";
+        resBox.textContent = "正在测试代理连通性...";
+        try {
+          const region = document.getElementById("cfgTargetRegion").value;
+          const tpl = document.getElementById("cfgProxyTemplate").value.trim();
+          const res = await fetch("/api/proxy/test", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              target_region: region,
+              proxy_template: tpl,
+            }),
+          });
+          const data = await res.json();
+          if (data.ok) {
+            resBox.style.color = "#23896b";
+            resBox.textContent = "✅ " + data.message;
+          } else {
+            resBox.style.color = "#c34b5b";
+            resBox.textContent = "❌ " + data.message;
+          }
+        } catch (e) {
+          resBox.style.color = "#c34b5b";
+          resBox.textContent = "❌ 请求异常: " + e;
+        } finally {
+          btn.disabled = false;
+          btn.textContent = "测试连通性";
+          fetchState();
+        }
+      }
+
+      async function saveConfig() {
+        const region = document.getElementById("cfgTargetRegion").value || "US";
+        const payload = {
+          target_region: region,
+          target_plan:
+            document.getElementById("cfgTargetPlan").value || "pro_2year_zero",
+          auto_cancel: document.getElementById("cfgAutoCancel").checked,
+          proxy_template: document
+            .getElementById("cfgProxyTemplate")
+            .value.trim(),
+          card: {
+            number: document.getElementById("cfgCardNumber").value.trim(),
+            exp_month: document.getElementById("cfgExpMonth").value.trim(),
+            exp_year: document.getElementById("cfgExpYear").value.trim(),
+            cvc: document.getElementById("cfgCvc").value.trim(),
+            holder: document.getElementById("cfgHolder").value.trim(),
+            address_line1:
+              document.getElementById("cfgAddr").value.trim() ||
+              "700 SW 5th Ave",
+            postal_code:
+              document.getElementById("cfgZip").value.trim() || "97201",
+            locality: "Portland",
+            province:
+              document.getElementById("cfgProvince").value.trim() || "OR",
+          },
+        };
+        await fetch("/api/config", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+        fetchState();
+      }
+
+      async function importAccounts() {
+        const raw = document.getElementById("importText").value.trim();
+        if (!raw) return alert("请先在文本框中粘贴要导入的账号！");
+        const res = await fetch("/api/accounts/import", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ raw_text: raw }),
+        });
+        const data = await res.json();
+        if (data.ok) {
+          document.getElementById("importText").value = "";
+          fetchState();
+        }
+      }
+
+      function validateCardBeforeRun(startStep) {
+        if (startStep > 4) return true;
+        const num = document
+          .getElementById("cfgCardNumber")
+          .value.replace(/\s+/g, "");
+        const expM = document.getElementById("cfgExpMonth").value.trim();
+        const expY = document.getElementById("cfgExpYear").value.trim();
+        const cvc = document.getElementById("cfgCvc").value.trim();
+        if (num.length < 12 || !expM || !expY || !cvc) {
+          alert(
+            "⚠️ 请先在左侧【全局配置与内联免税绑卡】中填写您的支付卡信息（卡号、有效期月/年、CVC 安全码）后再开始执行！",
+          );
+          document.getElementById("cfgCardNumber").focus();
+          return false;
+        }
+        return true;
+      }
+
+      async function runSingle(accountId) {
+        const startStep = selectedStartSteps[accountId] || 1;
+        if (!validateCardBeforeRun(startStep)) return;
+        await saveConfig();
+        const res = await fetch("/api/run/single", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            account_id: accountId,
+            start_step: startStep,
+          }),
+        });
+        if (!res.ok) {
+          const err = await res.json();
+          alert(err.detail || "启动失败");
+        }
+        fetchState();
+      }
+
+      async function runBatch() {
+        const startStep = parseInt(
+          document.getElementById("batchStartStep").value || "1",
+        );
+        if (!validateCardBeforeRun(startStep)) return;
+        await saveConfig();
+        const res = await fetch("/api/run/batch", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ start_step: startStep }),
+        });
+        if (!res.ok) {
+          const err = await res.json();
+          alert(err.detail || "批量启动失败");
+        }
+        fetchState();
+      }
+
+      async function stopSingle(accountId) {
+        await fetch("/api/stop", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ account_id: accountId }),
+        });
+        fetchState();
+      }
+
+      async function stopAll() {
+        await fetch("/api/stop", { method: "POST" });
+        fetchState();
+      }
+
+      async function openBrowser(accountId) {
+        openedBrowserMap[accountId] = true;
+        fetchState();
+        await fetch("/api/open_browser", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ account_id: accountId }),
+        });
+        setTimeout(() => {
+          delete openedBrowserMap[accountId];
+          fetchState();
+        }, 2500);
+      }
+
+      async function resetAccount(accountId) {
+        await fetch("/api/accounts/reset", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ account_id: accountId }),
+        });
+        fetchState();
+      }
+
+      async function deleteAccount(accountId) {
+        if (!confirm(`确定要从列表中移除账号 ${accountId} 吗？`)) return;
+        await fetch("/api/accounts/delete", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ account_id: accountId }),
+        });
+        fetchState();
+      }
+
+      function showScreenshot(accId, filename) {
+        document.getElementById("modalTitle").textContent =
+          `${accId} 最新核验截图 (${filename})`;
+        document.getElementById("modalImg").src =
+          `/screenshots/${filename}?t=${Date.now()}`;
+        document.getElementById("imgModal").showModal();
+      }
+
+      function closeModal() {
+        document.getElementById("imgModal").close();
+      }
+
+      function copyText(txt) {
+        navigator.clipboard.writeText(txt);
+      }
+
+      function copyAccountFull(accId, email, password, totpSecret) {
+        const fullStr = `${email}----${password}----${totpSecret}`;
+        navigator.clipboard.writeText(fullStr);
+        copiedAccountMap[accId] = true;
+        fetchState();
+        setTimeout(() => {
+          delete copiedAccountMap[accId];
+          fetchState();
+        }, 2000);
+      }
+
+      function updateNavigation() {
+        const currentSection = location.hash || "#overview";
+        document.querySelectorAll(".nav-link").forEach((link) => {
+          const isCurrent = link.hash === currentSection;
+          link.classList.toggle("active", isCurrent);
+          if (isCurrent) {
+            link.setAttribute("aria-current", "location");
+          } else {
+            link.removeAttribute("aria-current");
+          }
+        });
+      }
+
+      window.addEventListener("hashchange", updateNavigation);
+      updateNavigation();
+      fetchState();
+      setInterval(fetchState, 1500);
+    </script>
+  </body>
+</html>
