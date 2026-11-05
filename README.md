@@ -22,12 +22,11 @@ google-pro-helper/
 
 Linuxdo原帖在此:
 
-[https://linux.do/t/topic/3123997](https://linux.do/t/topic/3123997)（压缩包夸克链接我直接放下面了）
+[https://linux.do/t/topic/3123997](https://linux.do/t/topic/3123997)
 
 
 （💰 免费激活 Google AI Pro 12 / 24 个月」| offer token 注入）
 
-借用佬友的拓展来说明单号如何操作，感谢开源
 
 （我本人大部分号是用的是注册机批量搞的，原理都一样，总共整了七个目前都活过了半个月，不过被这么大批量薅，估计也活不久了）
 
@@ -67,7 +66,7 @@ Linuxdo原帖在此:
 
 ![image](https://i0.hdslb.com/bfs/new_dyn/c65340f450d8c110abd88de7f0faa99c3747579686817540.png@1192w.webp)
 
-**佬友补充：**
+**L站佬友补充：**
 
 > Fy6666:
 >
