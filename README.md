@@ -23,7 +23,7 @@ google-pro-helper/
 
 Linuxdo原帖在此:
 
-https://linux.do/t/topic/3123997（压缩包夸克链接我直接放下面了）
+[https://linux.do/t/topic/3123997](https://linux.do/t/topic/3123997)（压缩包夸克链接我直接放下面了）
 
 链接：https://pan.quark.cn/s/bd70b3410a69
 
