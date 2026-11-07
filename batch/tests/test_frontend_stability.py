@@ -132,12 +132,12 @@ class FrontendStabilityTests(unittest.TestCase):
         self.refresh()
         first = self.page.locator("#accountsTbody tr").first
         self.assertEqual(first.locator("select").input_value(), "5")
-        self.assertEqual(first.get_by_role("button", name="已复制", exact=True).count(), 1)
-        self.assertEqual(first.get_by_role("button", name="已打开", exact=True).count(), 1)
+        self.assertEqual(first.get_by_role("button", name="تم النسخ", exact=True).count(), 1)
+        self.assertEqual(first.get_by_role("button", name="تم الفتح", exact=True).count(), 1)
         self.page.evaluate("delete copiedAccountMap.first; delete openedBrowserMap.first;")
         self.refresh()
-        self.assertEqual(first.get_by_role("button", name="复制", exact=True).count(), 1)
-        self.assertEqual(first.get_by_role("button", name="浏览器", exact=True).count(), 1)
+        self.assertEqual(first.get_by_role("button", name="نسخ", exact=True).count(), 1)
+        self.assertEqual(first.get_by_role("button", name="المتصفح", exact=True).count(), 1)
         self.assertEqual(first.locator("select").input_value(), "5")
 
     def test_log_styles_escaping_and_scroll_behavior_unchanged(self):

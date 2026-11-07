@@ -1,10 +1,12 @@
-/* Xi · Google AI Pro Offer Injector — MAIN world
- * 在 one.google.com 内劫持 Play 结账请求，把订阅商品替换为指定 offer token。
+/* Free Zoot · Google AI Pro Offer Injector — MAIN world
+ * اعتراض طلبات الدفع داخل one.google.com واستبدال عناصر الاشتراك برمز العرض المحدد.
+ * حقوق النشر محفوظة لقناة التليجرام: https://t.me/Free_Zoot_Dis
  */
 (() => {
   if (window.__GAPT_HOOKED) return;
   window.__GAPT_HOOKED = true;
 
+  const TG_URL = "https://t.me/Free_Zoot_Dis";
   const PREFIX = "subs:com.google.android.apps.subscriptions.red:";
 
   const TOKENS = {
@@ -30,33 +32,54 @@
     };
   }
 
-  /* ---------- 页面右下角状态条 ---------- */
+  /* ---------- شريط الحالة أسفل الصفحة + رابط انضم إلينا ---------- */
   let badge = null;
+  let statusTextEl = null;
   function showBadge(text, color) {
     try {
       if (!document.body) return;
       if (!badge) {
         badge = document.createElement("div");
+        badge.dir = "rtl";
         badge.style.cssText = "position:fixed;right:14px;bottom:14px;z-index:2147483647;" +
-          "padding:8px 12px;border-radius:8px;font:12px/1.5 -apple-system,Segoe UI,Roboto,sans-serif;" +
-          "box-shadow:0 2px 10px rgba(0,0,0,.15);border:1px solid #d0d0d0;background:#fff;color:#333;max-width:260px;";
+          "padding:10px 14px;border-radius:10px;font:12.5px/1.6 'Segoe UI',Tahoma,Roboto,sans-serif;" +
+          "box-shadow:0 4px 14px rgba(0,0,0,.18);border:1px solid #cfd8e3;background:#fff;color:#1d2c47;max-width:310px;" +
+          "display:flex;flex-direction:column;gap:6px;text-align:right;";
+        statusTextEl = document.createElement("div");
+        statusTextEl.style.fontWeight = "700";
+
+        const joinLink = document.createElement("a");
+        joinLink.href = TG_URL;
+        joinLink.target = "_blank";
+        joinLink.rel = "noopener noreferrer";
+        joinLink.textContent = "✈️ انضم إلينا على تليجرام · Free Zoot";
+        joinLink.style.cssText = "display:inline-block;padding:4px 10px;border-radius:6px;background:#2481cc;color:#fff;" +
+          "text-decoration:none;font-size:11.5px;font-weight:700;text-align:center;";
+
+        badge.appendChild(statusTextEl);
+        badge.appendChild(joinLink);
         document.body.appendChild(badge);
       }
-      badge.textContent = text;
+      statusTextEl.textContent = text;
       badge.style.background = color || "#fff";
     } catch (e) {}
   }
 
   function refreshBadge() {
     if (!currentTest) {
-      showBadge("注入器：未启用", "#f5f5f5");
+      showBadge("أداة الحقن: غير مفعّلة", "#f5f5f5");
     } else {
-      const label = { "12m": "12 个月", "6m_ss": "6 个月（SS）", "6m": "6 个月", "6m_2": "6 个月（备）" }[currentTest.layer] || currentTest.layer;
-      showBadge("注入已挂载 · " + label + (subId ? " · 续订叠加" : ""), "#eaf7ea");
+      const label = {
+        "12m": "12 شهراً (المرحلة 1)",
+        "6m_ss": "6 أشهر SS (المرحلة 2)",
+        "6m": "6 أشهر (المرحلة 3)",
+        "6m_2": "6 أشهر (احتياطي)"
+      }[currentTest.layer] || currentTest.layer;
+      showBadge("✅ تم تفعيل الحقن · " + label + (subId ? " · تمديد متراكم" : ""), "#eaf7ea");
     }
   }
 
-  /* ---------- 请求改写 ---------- */
+  /* ---------- تعديل الطلبات ---------- */
   function patchNode(node) {
     if (!Array.isArray(node) || !currentTest || !Array.isArray(currentTest.full_items)) return false;
     let patched = false;
@@ -86,7 +109,7 @@
       const parts = bodyStr.split("&");
       for (let i = 0; i < parts.length; i++) {
         if (parts[i].startsWith("f.req=")) {
-          const raw = decodeURIComponent(parts[i].slice(6).replace(/\\+/g, " "));
+          const raw = decodeURIComponent(parts[i].slice(6).replace(/\+/g, " "));
           const outer = JSON.parse(raw);
           let changed = false;
           if (Array.isArray(outer)) {
@@ -176,7 +199,7 @@
     return origSetAttr.call(this, name, val);
   };
 
-  /* ---------- 接收配置 ---------- */
+  /* ---------- استقبال الإعدادات ---------- */
   function applyLayer(layer) {
     const cfg = makeCfg(layer);
     currentTest = cfg ? Object.assign({ layer: layer }, cfg) : null;
@@ -199,7 +222,7 @@
     }
   });
 
-  // 首次读取（content.js 也会 post 一次）
+  // القراءة الأولية
   const attrCfg = document.documentElement.getAttribute("data-gapt-layer");
   applyLayer(attrCfg || "off");
   document.addEventListener("DOMContentLoaded", refreshBadge);
